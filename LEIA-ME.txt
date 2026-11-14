@@ -1,27 +1,4 @@
-DUELO DE PALAVRAS — PRIMEIRA VERSÃO
+O guia do projeto foi atualizado e agora está em README.md.
 
-Arquivos:
-- index.html: jogo completo (HTML, CSS e JavaScript).
-- manifest.webmanifest e icon.svg: instalação como aplicativo.
-- sw.js: cache para abrir offline depois do primeiro acesso.
-
-PUBLICAR DE GRAÇA NO CLOUDFLARE PAGES:
-1. Descompacte duelo-de-palavras.zip.
-2. Acesse https://pages.cloudflare.com/ e entre/crie uma conta.
-3. Escolha criar um projeto Pages e faça upload direto dos arquivos estáticos (Direct Upload).
-4. Envie a pasta/arquivos do projeto, mantendo index.html na raiz.
-5. Conclua o deploy. O Cloudflare fornecerá uma URL *.pages.dev.
-6. Abra essa URL no celular. No Android/Chrome: menu ⋮ > Instalar app ou Adicionar à tela inicial.
-
-COMO JOGAR:
-- Cada pessoa abre o mesmo link no próprio celular.
-- Escolha uma categoria ou "Misturadão".
-- Descubra a palavra de 5 letras em até 6 tentativas.
-- "Nova partida" sorteia outra palavra. Não há limite de partidas.
-- As estatísticas ficam salvas localmente em cada aparelho (não são sincronizadas entre celulares).
-
-OBSERVAÇÕES DA V1:
-- É um jogo frontend, sem servidor, login ou banco de dados.
-- Para competir com placar compartilhado entre os dois celulares, será necessário adicionar uma camada online (por exemplo, Supabase).
-- A lista de palavras é curada e ainda pode não aceitar toda palavra válida em português.
-- O jogo usa palavras sem acentos na digitação; acentos são normalizados automaticamente.
+Consulte README.md para rodar e publicar o jogo e para seguir o fluxo de SDD
+(especificação, plano e tarefas) nas próximas funcionalidades.
