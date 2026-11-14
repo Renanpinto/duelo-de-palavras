@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171923">
+  <meta name="description" content="Duelo de Palavras — descubra a palavra em até seis tentativas.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Duelo de Palavras</title>
+  <style>
+    :root{color-scheme:dark;--bg:#11131b;--panel:#1b1f2b;--panel2:#252a38;--text:#f5f6fa;--muted:#9ba3b5;--line:#343b4d;--green:#4caa79;--yellow:#c7a64b;--gray:#454b5b;--accent:#a78bfa}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#24243a 0,#11131b 55%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+    button,select{font:inherit} .wrap{width:min(100% - 28px,520px);margin:0 auto;padding:26px 0 38px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#a78bfa,#6d5bd0);display:grid;place-items:center;font-weight:900;color:#171523;font-size:20px;box-shadow:0 7px 24px #8b5cf633}
+    h1{font-size:19px;letter-spacing:-.5px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:3px}
+    .iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
+    .hero{text-align:center;margin:16px 0 18px}.eyebrow{color:#c4b5fd;text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800}.hero h2{font-size:27px;letter-spacing:-1px;margin:7px 0 5px}.hero p{color:var(--muted);font-size:13px;margin:0}
+    .toolbar{display:flex;gap:9px;align-items:center;justify-content:center;margin:18px 0 16px;flex-wrap:wrap}
+    select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 34px 10px 12px;border-radius:12px;max-width:210px}
+    .pill{border:1px solid var(--line);background:#ffffff08;color:#d7d9e2;padding:8px 11px;border-radius:999px;font-size:11px}
+    .board{display:grid;grid-template-rows:repeat(6,1fr);gap:7px;width:min(100%,330px);margin:0 auto 18px}
+    .row{display:grid;grid-template-columns:repeat(var(--word-length,5),1fr);gap:7px}
+    .tile{aspect-ratio:1;border:2px solid #3a4051;border-radius:9px;display:grid;place-items:center;font-size:clamp(22px,6vw,28px);font-weight:850;text-transform:uppercase;background:#ffffff03;transition:transform .12s,border-color .12s}
+    .tile.filled{border-color:#777f94;animation:pop .09s}.tile.correct{background:var(--green);border-color:var(--green)}.tile.present{background:var(--yellow);border-color:var(--yellow)}.tile.absent{background:var(--gray);border-color:var(--gray)}
+    @keyframes pop{50%{transform:scale(1.06)}}
+    .message{min-height:22px;text-align:center;color:#ddd6fe;font-size:13px;font-weight:650;margin:0 0 9px}
+    .keyboard{display:grid;gap:7px;max-width:480px;margin:0 auto}
+    .keyrow{display:flex;justify-content:center;gap:5px}
+    .key{height:49px;min-width:0;flex:1;max-width:43px;border:0;border-radius:8px;background:#737b8e;color:white;font-weight:800;font-size:14px;cursor:pointer;padding:0 3px}
+    .key.wide{max-width:66px;font-size:10px}.key.correct{background:var(--green)}.key.present{background:var(--yellow)}.key.absent{background:#343a49;color:#b7bdca}
+    .key:active,.primary:active{transform:scale(.97)}
+    .actions{display:flex;gap:9px;justify-content:center;margin:17px 0 20px;flex-wrap:wrap}
+    .primary,.secondary{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,#b9a4ff,#8b75e8);color:#171523;box-shadow:0 8px 25px #8b5cf626}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0}
+    .stat{background:#ffffff08;border:1px solid var(--line);border-radius:13px;padding:12px 5px;text-align:center}.stat strong{font-size:21px;display:block}.stat span{font-size:10px;color:var(--muted)}
+    .legend{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:16px 0}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+    footer{text-align:center;color:#71798b;font-size:11px;margin-top:20px}
+    dialog{border:1px solid var(--line);border-radius:18px;background:#1b1f2b;color:var(--text);width:min( calc(100% - 32px),420px);padding:22px;box-shadow:0 20px 80px #0009}
+    dialog::backdrop{background:#080910bb;backdrop-filter:blur(4px)}dialog h3{margin:0 0 10px}dialog p,dialog li{color:#c1c6d2;font-size:13px;line-height:1.55}dialog .close{float:right}
+    .result-word{font-size:25px;font-weight:900;letter-spacing:4px;color:#c4b5fd;text-align:center;margin:14px}
+    .hidden{display:none!important}
+    @media(max-width:380px){.wrap{width:min(100% - 20px,520px);padding-top:18px}.key{height:45px;font-size:12px}.key.wide{font-size:9px}.board{gap:5px}.row{gap:5px}.tile{border-radius:7px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="brand"><div class="logo">D</div><div><h1>Duelo de Palavras</h1><div class="sub">um jogo, infinitas revanchezinhas</div></div></div>
+      <button class="iconbtn" id="helpBtn" aria-label="Como jogar">?</button>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">Desafio de hoje? Não. Desafio de agora.</div>
+      <h2>Qual é a palavra?</h2>
+      <p id="challengeText">Descubra a palavra em até 6 tentativas.</p>
+    </section>
+    <div class="toolbar">
+      <select id="category" aria-label="Categoria">
+        <option value="mix">🎲 Misturadão</option>
+        <option value="geral">🌎 Geral</option>
+        <option value="casal">💜 Casal</option>
+        <option value="viagem">✈️ Viagem</option>
+        <option value="comida">🍕 Comida</option>
+        <option value="filmes">🎬 Filmes e séries</option>
+        <option value="musica">🎵 Música</option>
+      </select>
+      <select id="wordLength" aria-label="Tamanho da palavra">
+        <option value="4">4 letras</option><option value="5" selected>5 letras</option><option value="6">6 letras</option><option value="7">7 letras</option>
+      </select>
+      <span class="pill" id="roundLabel">Partida livre</span>
+    </div>
+    <div class="board" id="board" aria-label="Tabuleiro de seis tentativas"></div>
+    <p class="message" id="message" aria-live="polite">Digite uma palavra para começar.</p>
+    <div class="keyboard" id="keyboard" aria-label="Teclado virtual"></div>
+    <div class="actions">
+      <button class="primary" id="newGame">Nova partida</button>
+      <button class="secondary" id="shareBtn">Compartilhar resultado</button>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--green)"></i>Letra certa no lugar certo</span>
+      <span><i class="dot" style="background:var(--yellow)"></i>Existe, mas em outro lugar</span>
+      <span><i class="dot" style="background:var(--gray)"></i>Não existe</span>
+    </div>
+    <section class="stats" aria-label="Estatísticas">
+      <div class="stat"><strong id="played">0</strong><span>Partidas</span></div>
+      <div class="stat"><strong id="wins">0</strong><span>Vitórias</span></div>
+      <div class="stat"><strong id="rate">0%</strong><span>Acerto</span></div>
+      <div class="stat"><strong id="streak">0</strong><span>Sequência</span></div>
+    </section>
+    <footer>Feito para duas pessoas competitivas. 💜<br>Seu progresso fica salvo neste aparelho.</footer>
+  </main>
+
+  <dialog id="helpDialog">
+    <button class="iconbtn close" id="closeHelp">✕</button>
+    <h3>Como jogar</h3>
+    <p>Você tem <b>6 tentativas</b> para descobrir uma palavra. Escolha o tamanho antes de começar.</p>
+    <ul>
+      <li><b style="color:#72d6a1">Verde:</b> letra certa no lugar certo.</li>
+      <li><b style="color:#e4c66e">Amarelo:</b> a letra existe, mas está em outra posição.</li>
+      <li><b style="color:#aeb5c5">Cinza:</b> a letra não aparece na palavra.</li>
+    </ul>
+    <p>Escolha uma categoria ou deixe no misturadão. Cada nova partida sorteia outra palavra. As estatísticas são salvas separadamente em cada celular.</p>
+  </dialog>
+  <dialog id="resultDialog">
+    <h3 id="resultTitle">Boa!</h3>
+    <p id="resultText"></p>
+    <div class="result-word" id="resultWord"></div>
+    <div class="actions"><button class="primary" id="againBtn">Jogar de novo</button><button class="secondary" id="closeResult">Fechar</button></div>
+  </dialog>
+<script>
+(() => {
+  const WORDS = {
+    geral: `abalo abeto abono abril acaso acha água algo alma alta amor anel anos arco área arma arte azul bala banco banho barba barco base beco beijo bela belo bola bolo bom borda brasa brisa broto cabo caça café calma calor cama cana capa cara caro casa caso cela cena cento certo chave cheia cheiro chuva cima cinco clube cobra coco coisa colar comer conto corpo corte couro cravo crime cruz cuidar curso dança dado data dedo deixa deus dieta digno disco doce dono dor drama duna eixo elogio erro esta este etapa exato face fácil fala farol fase fatal fazer febre feira feliz festa filho firme flor foco fogo folha fonte força forte frase fruta fuga fundo ganhar gente gesto girar globo gola golpe gosto graça grade grama grão grupo guia hino honra hora hotel ideia igual ilha ímpar início jovem juiz junto lado lago lama lance largo lazer leito lenha leste letra leve livro local longe lugar maior malha manga mapa março maré massa matar medo meia meio melão menor mesa metro mimo mina moda moeda monte morro morte motor muito mundo música nada natal naval neve noite noiva noivo nome nota nuvem óleo olhos onda onze ordem órgão ouro outro pacto padre pagar palco papel parar parte passo pasta pato pausa pedra peixe pente perda perto peso pesto piano pintar pizza plano plena pobre poder ponto povo praça praia prato prego preto prosa prova pulso quadro quase queda queijo querer quilo rádio raiz raiva ramo rapaz razão regra reino renda risco ritmo rocha roda rosto roubo roupa ruído rumo sábio saber sabão salão salto samba sangue saúde senha senso série sério sinal sítio sobre sofá sonho sorte subir suor tacho tarde tela tema tempo tenda tênis terra texto tigre tinta título toque torre total trato trigo turma união único usado valor vapor verde verso vidro vigor vinho viola vista vital viver vizinho volta zero zelar zona`.split(/\s+/),
+    casal: `afeto amor beijo bela belo carinho casal dengo desejo doce encanto namoro noiva noivo olhos paixão pausa risos romance sonho toque união juntos`.split(/\s+/),
+    viagem: `aeroporto avião bagagem barco bilhete bosque cabine caminho cidade destino estrada férias guia hotel ilha mapa mala metrô mochila mundo norte ônibus passeio passageiro passagem pousada praia roteiro ruela serra trilha viagem viajante visto`.split(/\s+/),
+    comida: `abacate açúcar alho arroz azeite banana batata bebida biscoito bolo café caldo carne cebola cenoura cerveja chá chocolate comida creme doce farinha feijão queijo fruta leite limão macarrão manteiga mel molho peixe pizza pudim salada salgado sopa suco sushi tomate torta`.split(/\s+/),
+    filmes: `ator atriz aventura cinema comédia desenho diretor drama elenco estreia filme ficção herói humor longa magia novela roteiro série terror trama`.split(/\s+/),
+    musica: `acorde álbum baixo banda batuque canção canto cantor coral disco flauta forró guitarra melodia música notas ópera palco piano ritmo samba som teclado timbre trompete violão`.split(/\s+/)
+  };
+  // A lista interna contém vocabulário português; a normalização ignora acentos.
+  const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/[^A-Z]/g,"");
+  const cleanLists = {};
+  Object.keys(WORDS).forEach(k => cleanLists[k] = [...new Set(WORDS[k].map(norm).filter(w => w.length >= 4 && w.length <= 7))]);
+  const all = [...new Set(Object.values(cleanLists).flat())];
+  const valid = new Set(all);
+  const $ = id => document.getElementById(id);
+  const board = $("board"), keyboard = $("keyboard");
+  let wordLength=5, answer="", guesses=[], current=Array(wordLength).fill(""), cursor=0, finished=false, round=1, history=[];
+  let stats = JSON.parse(localStorage.getItem("dueloStats") || '{"played":0,"wins":0,"streak":0}');
+  const rows = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+  function pickWord() {
+    const cat = $("category").value;
+    const words = cat === "mix" ? all : (cleanLists[cat] || all);
+    const pool = words.filter(word => word.length === wordLength);
+    const choices = pool.length ? pool : all.filter(word => word.length === wordLength);
+    return choices[Math.floor(Math.random()*choices.length)];
+  }
+  function newGame() {
+    wordLength=Number($("wordLength").value); answer = pickWord(); guesses=[]; current=Array(wordLength).fill(""); cursor=0; finished=false;
+    $("board").style.setProperty("--word-length",wordLength);
+    $("board").style.width=`min(100%, ${Math.min(480,wordLength*62)}px)`;
+    $("challengeText").textContent=`Descubra a palavra de ${wordLength} letras em até 6 tentativas.`;
+    $("message").textContent="Digite uma palavra para começar.";
+    $("roundLabel").textContent=`Partida livre · #${round++}`;
+    $("resultDialog").close?.();
+    render(); renderKeyboard();
+  }
+  function render() {
+    board.innerHTML="";
+    for(let r=0;r<6;r++){
+      const row=document.createElement("div"); row.className="row";
+      const value=guesses[r] ? guesses[r].word : (r===guesses.length ? current : "");
+      for(let c=0;c<wordLength;c++){
+        const tile=document.createElement("div"); tile.className="tile";
+        const letter=Array.isArray(value) ? (value[c] || "") : (value[c] || "");
+        tile.textContent=letter;
+        if(letter) tile.classList.add("filled");
+        if(guesses[r]) tile.classList.add(guesses[r].states[c]);
+        if(!guesses[r] && r===guesses.length){tile.style.cursor="pointer";if(c===cursor)tile.style.borderColor="#c4b5fd";tile.addEventListener("click",()=>{cursor=c;render();});}
+        row.appendChild(tile);
+      }
+      board.appendChild(row);
+    }
+  }
+  function renderKeyboard() {
+    keyboard.innerHTML="";
+    rows.forEach((letters,ri)=>{
+      const row=document.createElement("div"); row.className="keyrow";
+      if(ri===2) addKey(row,"APAGAR","wide",backspace);
+      [...letters].forEach(ch=>addKey(row,ch,"",()=>type(ch)));
+      if(ri===2) addKey(row,"ENTER","wide",submit);
+      keyboard.appendChild(row);
+    });
+  }
+  function addKey(parent,label,extra,fn) {
+    const b=document.createElement("button"); b.className="key "+extra; b.textContent=label;b.type="button";b.addEventListener("click",fn);parent.appendChild(b);
+  }
+  function type(ch){if(finished)return;current[cursor]=ch;cursor=Math.min(cursor+1,wordLength-1);render();}
+  function backspace(){if(finished)return;if(current[cursor])current[cursor]="";else if(cursor>0){cursor--;current[cursor]="";}render();}
+  function score(guess) {
+    const states=Array(wordLength).fill("absent"), remaining=answer.split("");
+    for(let i=0;i<wordLength;i++) if(guess[i]===answer[i]){states[i]="correct";remaining[i]=null;}
+    for(let i=0;i<wordLength;i++) if(states[i]!=="correct"){const j=remaining.indexOf(guess[i]);if(j!==-1){states[i]="present";remaining[j]=null;}}
+    return states;
+  }
+  function submit(){
+    if(finished)return;
+    if(current.some(letter=>!letter)){$("message").textContent=`Preencha as ${wordLength} letras da palavra.`;return;}
+    const submitted=current.join("");
+    if(submitted.length!==wordLength || !valid.has(submitted)){ $("message").textContent="Essa palavra não está no vocabulário em português. Tente outra.";return;}
+    const states=score(submitted);
+    guesses.push({word:submitted,states});
+    current=Array(wordLength).fill("");cursor=0;render(); updateKeyColors(submitted,states);
+    if(submitted===answer){finish(true);return;}
+    if(guesses.length===6){finish(false);return;}
+    $("message").textContent=`Boa! ${6-guesses.length} tentativa(s) restante(s).`;
+  }
+  function updateKeyColors(word,states){
+    [...word].forEach((ch,i)=>{
+      const keys=[...keyboard.querySelectorAll(".key")].filter(k=>k.textContent===ch);
+      keys.forEach(k=>{if(states[i]==="correct"||(!k.classList.contains("correct")&&states[i]==="present")||(!k.classList.contains("correct")&&!k.classList.contains("present")&&states[i]==="absent"))k.classList.add(states[i]);});
+    });
+  }
+  function finish(win){
+    finished=true;stats.played++;if(win){stats.wins++;stats.streak++;}else stats.streak=0;
+    localStorage.setItem("dueloStats",JSON.stringify(stats));updateStats();
+    $("message").textContent=win?"Acertou! Mandou bem! 🎉":"Fim de jogo! Na próxima você pega.";
+    $("resultTitle").textContent=win?"Você matou a charada! 🎉":"Quase! Essa escapou.";
+    $("resultText").textContent=win?`Você descobriu em ${guesses.length} tentativa(s).`:"A palavra era:";
+    $("resultWord").textContent=answer;
+    setTimeout(()=>$("resultDialog").showModal(),350);
+  }
+  function updateStats(){
+    $("played").textContent=stats.played;$("wins").textContent=stats.wins;
+    $("rate").textContent=stats.played?Math.round(stats.wins/stats.played*100)+"%":"0%";
+    $("streak").textContent=stats.streak;
+  }
+  function share(){
+    const squares=guesses.map(g=>g.states.map(s=>s==="correct"?"🟩":s==="present"?"🟨":"⬛").join("")).join("\n");
+    const text=`Duelo de Palavras #${round-1}\n${guesses.length}/6\n\n${squares}\n\nJogue também!`;
+    if(navigator.share) navigator.share({title:"Duelo de Palavras",text}).catch(()=>{});
+    else if(navigator.clipboard) navigator.clipboard.writeText(text).then(()=>$("message").textContent="Resultado copiado!").catch(()=>$("message").textContent=text);
+    else $("message").textContent="Compartilhamento não disponível neste navegador.";
+  }
+  document.addEventListener("keydown",e=>{
+    if($("helpDialog").open||$("resultDialog").open)return;
+    if(e.key==="Enter")submit();else if(e.key==="Backspace")backspace();else if(/^[a-zA-Z]$/.test(e.key))type(norm(e.key));
+  });
+  $("newGame").addEventListener("click",newGame);$("againBtn").addEventListener("click",newGame);
+  $("shareBtn").addEventListener("click",share);$("category").addEventListener("change",newGame);$("wordLength").addEventListener("change",newGame);
+  $("helpBtn").addEventListener("click",()=>$("helpDialog").showModal());$("closeHelp").addEventListener("click",()=>$("helpDialog").close());
+  $("closeResult").addEventListener("click",()=>$("resultDialog").close());
+  updateStats();newGame();
+  if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>

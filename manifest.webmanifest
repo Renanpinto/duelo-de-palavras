@@ -1,0 +1,17 @@
+{
+  "name": "Duelo de Palavras",
+  "short_name": "Duelo",
+  "description": "Descubra a palavra em até seis tentativas.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#11131b",
+  "theme_color": "#171923",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
