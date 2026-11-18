@@ -67,7 +67,7 @@
     .tile.reveal.correct{--reveal-color:var(--green);--reveal-ink:#081a12}.tile.reveal.present{--reveal-color:var(--yellow);--reveal-ink:#211809}.tile.reveal.absent{--reveal-color:var(--gray);--reveal-ink:#f0f1f5}
     @keyframes tile-reveal{0%,44%{transform:rotateX(0);background:linear-gradient(145deg,#ffffff06,#ffffff01);border-color:#3b4357;color:var(--text)}50%{transform:rotateX(88deg)}51%{background:var(--reveal-color);border-color:var(--reveal-color);color:var(--reveal-ink)}100%{transform:rotateX(0);background:var(--reveal-color);border-color:var(--reveal-color);color:var(--reveal-ink)}}
     .message{min-height:28px;color:#d0c4ff;font-size:13px;margin:1px 0 10px}
-    .keyboard{gap:8px;max-width:540px}.keyrow{gap:6px}
+    .keyboard{gap:8px;max-width:540px;scroll-margin-bottom:18px}.keyrow{gap:6px}
     .key{height:52px;max-width:45px;border-radius:10px;background:#737d91;font-size:14px;transition:transform .12s,filter .12s,background .12s;box-shadow:inset 0 1px #ffffff20}
     .key:hover{filter:brightness(1.12)}.key:active{transform:translateY(1px) scale(.97)}
     .key.wide{flex:2 1 0;min-width:64px;max-width:140px;font-size:10px;letter-spacing:.15px;background:#454d61}
@@ -164,29 +164,39 @@
   };
   // Respostas curadas ficam aqui; palpites ampliados vêm de arquivo local.
   const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/[^A-Z]/g,"");
-  const cleanLists = {};
+  const cleanLists = {}, answerLists = {};
   const pluralForms = new Set(["ANOS","FERIAS","JUNTOS","NOTAS","OLHOS","RISOS"]);
   const conjugatedForms = new Set(["DEIXA"]);
-  Object.keys(WORDS).forEach(k => cleanLists[k] = [...new Set(WORDS[k].map(norm).filter(w => w.length >= 4 && w.length <= 7 && !pluralForms.has(w) && !conjugatedForms.has(w)))]);
-  const all = [...new Set(Object.values(cleanLists).flat())];
+  Object.keys(WORDS).forEach(k=>{
+    const seen=new Set();
+    answerLists[k]=WORDS[k].filter(original=>{
+      const normalized=norm(original);
+      if(normalized.length<4||normalized.length>7||pluralForms.has(normalized)||conjugatedForms.has(normalized)||seen.has(normalized))return false;
+      seen.add(normalized);return true;
+    }).map(original=>({display:original.toLocaleLowerCase("pt-BR"),normalized:norm(original)}));
+    cleanLists[k]=answerLists[k].map(entry=>entry.normalized);
+  });
   // Palpites comuns acrescentados após relatos de palavras portuguesas ausentes.
   const extraWords = ["POMBO","PORTA","POLVO"];
-  cleanLists.geral.push(...extraWords.filter(word => !cleanLists.geral.includes(word)));
-  all.push(...extraWords.filter(word => !all.includes(word)));
+  extraWords.forEach(word=>{if(!cleanLists.geral.includes(word)){cleanLists.geral.push(word);answerLists.geral.push({display:word.toLocaleLowerCase("pt-BR"),normalized:word});}});
+  const all = [...new Set(Object.values(cleanLists).flat())];
+  const answerChoices = [...new Map(Object.values(answerLists).flat().map(entry=>[entry.normalized,entry])).values()];
   const valid = new Set(all); // União das categorias e dos palpites extras.
   const $ = id => document.getElementById(id);
   const expandedValid = new Set();
   let vocabularyPromise = Promise.resolve(), vocabularyError = false, checkingVocabulary = false;
   const board = $("board"), keyboard = $("keyboard");
-  let wordLength=5, answer="", guesses=[], current=Array(wordLength).fill(""), cursor=0, finished=false, animating=false, revealingRow=-1, revealTimer, restoreBoardFocus=false, round=1, history=[];
+  let wordLength=5, answer="", answerDisplay="", guesses=[], current=Array(wordLength).fill(""), cursor=0, finished=false, animating=false, revealingRow=-1, revealTimer, restoreBoardFocus=false, round=1, history=[];
   let stats = JSON.parse(localStorage.getItem("dueloStats") || '{"played":0,"wins":0,"streak":0}');
   const rows = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
   function pickWord() {
     const cat = $("category").value;
-    const words = cat === "mix" ? all : (cleanLists[cat] || all);
-    const pool = words.filter(word => word.length === wordLength);
-    const choices = pool.length ? pool : all.filter(word => word.length === wordLength);
-    return choices[Math.floor(Math.random()*choices.length)];
+    const words = cat === "mix" ? answerChoices : (answerLists[cat] || answerChoices);
+    const pool = words.filter(entry => entry.normalized.length === wordLength);
+    const choices = pool.length ? pool : answerChoices.filter(entry => entry.normalized.length === wordLength);
+    const choice=choices[Math.floor(Math.random()*choices.length)];
+    answerDisplay=choice.display;
+    return choice.normalized;
   }
   function newGame() {
     clearTimeout(revealTimer);animating=false;revealingRow=-1;restoreBoardFocus=false;
@@ -207,7 +217,8 @@
       const value=guesses[r] ? guesses[r].word : (r===guesses.length ? current : "");
       for(let c=0;c<wordLength;c++){
         const tile=document.createElement("button"); tile.type="button"; tile.className="tile";
-        const letter=Array.isArray(value) ? (value[c] || "") : (value[c] || "");
+        const guessLetter=Array.isArray(value) ? (value[c] || "") : (value[c] || "");
+        const letter=guesses[r]?.states[c]==="correct"?Array.from(answerDisplay.toLocaleUpperCase("pt-BR"))[c]:guessLetter;
         tile.textContent=letter;
         const isActive=r===guesses.length&&!finished&&!animating;
         tile.disabled=!isActive;
@@ -217,7 +228,7 @@
         if(letter) tile.classList.add("filled");
         if(guesses[r]) tile.classList.add(guesses[r].states[c]);
         if(animating&&r===revealingRow){tile.classList.add("reveal");tile.style.setProperty("--reveal-delay",`${c*120}ms`);}
-        if(isActive){if(c===cursor)tile.classList.add("selected");tile.addEventListener("click",()=>{cursor=c;render();board.querySelectorAll(".tile")[guesses.length*wordLength+cursor]?.focus({preventScroll:true});});}
+        if(isActive){if(c===cursor)tile.classList.add("selected");tile.addEventListener("click",()=>{cursor=c;render();board.querySelectorAll(".tile")[guesses.length*wordLength+cursor]?.focus({preventScroll:true});ensureKeyboardVisible();});}
         row.appendChild(tile);
       }
       board.appendChild(row);
@@ -234,6 +245,12 @@
       if(ri===2) addKey(row,"ENTER","wide",submit);
       keyboard.appendChild(row);
     });
+  }
+  function ensureKeyboardVisible(){
+    const rect=keyboard.getBoundingClientRect();
+    if(rect.top>=0&&rect.bottom<=window.innerHeight)return;
+    const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    keyboard.scrollIntoView({behavior:reducedMotion?"auto":"smooth",block:"end"});
   }
   function addKey(parent,label,extra,fn,accessibleLabel=label) {
     const b=document.createElement("button"); b.className="key "+extra; b.textContent=label;b.type="button";b.setAttribute("aria-label",accessibleLabel);b.addEventListener("click",fn);parent.appendChild(b);
@@ -282,7 +299,7 @@
     $("message").textContent=win?"Acertou! Mandou bem! 🎉":"Fim de jogo! Na próxima você pega.";
     $("resultTitle").textContent=win?"Você matou a charada! 🎉":"Quase! Essa escapou.";
     $("resultText").textContent=win?`Você descobriu em ${guesses.length} tentativa(s).`:"A palavra era:";
-    $("resultWord").textContent=answer;
+    $("resultWord").textContent=answerDisplay.charAt(0).toLocaleUpperCase("pt-BR")+answerDisplay.slice(1);
     setTimeout(()=>$("resultDialog").showModal(),350);
   }
   function updateStats(){

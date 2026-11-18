@@ -48,7 +48,7 @@ The game should feel like a compact late-night word arena: a quiet ink-blue room
 
 - **Audience and primary job:** Portuguese-speaking casual players who want to start a quick word challenge and understand each guess at a glance.
 - **Target market(s) and evidence:** Brazil is the language context, based on `index.html` using `pt-BR`; no additional market behavior is assumed.
-- **Locale(s) and language policy:** Brazilian Portuguese. Normalize diacritics for matching while displaying uppercase letters.
+- **Locale(s) and language policy:** Brazilian Portuguese. Normalize diacritics for matching without requiring accented input; display the answer's original accents on correct tiles and in the revealed answer.
 - **Usage scene:** Short, repeatable sessions on phones, with the same page also usable on desktop.
 - **Register:** Casual product with a small amount of game-show energy.
 - **Memorable signature:** A luminous, framed word grid with a lilac selection ring and green/gold result tiles.
@@ -109,6 +109,7 @@ Use Brazilian Portuguese, sentence case, and plain action labels. Letter feedbac
 ## Do's and Don'ts
 
 - **Do:** Keep the current row and its selected tile visually obvious.
+- **Do:** Bring the virtual keyboard into view when a player selects a tile on a small screen.
 - **Do:** Keep the board as the strongest element on every viewport.
 - **Don't:** Use accent color as the only indication of a tile state.
 - **Don't:** shrink the keyboard or tiles to fit long copy; let the page scroll instead.

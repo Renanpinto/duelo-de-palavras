@@ -27,6 +27,10 @@ fica em arquivo separado, é carregada localmente e funciona offline após o cac
   removidas do vocabulário aceito; verbos no infinitivo podem permanecer.
 - **RF-6:** A fonte, licença, atribuição e filtros da lista derivada ficam
   documentados junto aos dados e no README.
+- **RF-7:** A digitação e a comparação não exigem acentos; casas corretas e a
+  palavra revelada preservam a grafia acentuada original da resposta.
+- **RF-8:** Ao selecionar uma casa no tabuleiro em tela pequena, a página rola
+  até deixar o teclado virtual visível.
 
 ## Critérios de aceite
 
@@ -41,6 +45,12 @@ fica em arquivo separado, é carregada localmente e funciona offline após o cac
 - **CA-6:** A lista é carregada de arquivo local e está incluída no cache offline.
 - **CA-7:** A documentação identifica FrequencyWords, corpus OpenSubtitles 2018,
   licença CC BY-SA 4.0 e as alterações feitas para este jogo.
+- **CA-8:** A resposta `limão` aceita o palpite `limao`; letras corretas são
+  exibidas como `LIMÃO` durante a revelação e a resposta final aparece como
+  `Limão`.
+- **CA-9:** Tocar numa casa fora da área visível do teclado rola a página para
+  exibir todas as teclas, sem rolar se o teclado já estiver visível e respeitando
+  a preferência por movimento reduzido.
 
 ## Estados e casos de borda
 

@@ -26,7 +26,11 @@ verificar o service worker e o comportamento de instalação do PWA.
   compacto e o teclado virtual não inclui Ç.
 - Envie a tentativa com Enter. Você tem até seis tentativas.
 - Verde indica letra no lugar certo; amarelo indica letra em outra posição; cinza
-  indica letra ausente. Acentos são normalizados para comparar as palavras.
+  indica letra ausente. Não é necessário digitar acentos para validar a palavra;
+  casas corretas e o resultado revelado preservam os acentos da resposta, como
+  em `Limão`.
+- Em telas pequenas, tocar numa casa seleciona a posição e rola a página até o
+  teclado virtual ficar visível.
 - As respostas sorteadas ficam nas listas de categoria curadas em `index.html`.
   Para validar palpites, o jogo também carrega `data/palavras-pt-br.txt`, com
   milhares de palavras de 4 a 7 letras. A lista é local, fica em cache para uso
