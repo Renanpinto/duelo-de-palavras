@@ -1,5 +1,5 @@
-const CACHE="duelo-palavras-v1";
-const FILES=["./","./index.html","./manifest.webmanifest","./icon.svg"];
+const CACHE="duelo-palavras-v4";
+const FILES=["./","./index.html","./manifest.webmanifest","./icon.svg?v=2","./data/palavras-pt-br.txt"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(res=>{const copy=res.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return res;}).catch(()=>caches.match("./index.html"))));});

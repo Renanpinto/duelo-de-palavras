@@ -1,1 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#a78bfa"/><g fill="#171523"><rect x="17" y="17" width="42" height="42" rx="8"/><rect x="69" y="17" width="42" height="42" rx="8"/><rect x="17" y="69" width="42" height="42" rx="8"/><path d="M80 69h15v15h16v15H95v12H80V99H69V84h11z"/></g><text x="38" y="48" font-family="Arial" font-size="30" font-weight="900" fill="#a78bfa" text-anchor="middle">D</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Duelo de Palavras</title>
+  <defs>
+    <linearGradient id="arena" x1="12" y1="8" x2="116" y2="122" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B7A0FF"/>
+      <stop offset="1" stop-color="#F09BB0"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="28" y1="24" x2="100" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22283A"/>
+      <stop offset="1" stop-color="#121724"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#arena)"/>
+  <rect x="14" y="14" width="100" height="100" rx="23" fill="#111522"/>
+  <g fill="url(#tile)" stroke="#657087" stroke-width="2">
+    <rect x="25" y="25" width="34" height="34" rx="8"/>
+    <rect x="64" y="25" width="34" height="34" rx="8"/>
+    <rect x="25" y="64" width="34" height="34" rx="8"/>
+    <rect x="64" y="64" width="34" height="34" rx="8"/>
+  </g>
+  <rect x="25" y="25" width="34" height="34" rx="8" fill="#52C995"/>
+  <rect x="64" y="64" width="34" height="34" rx="8" fill="#E3B95F"/>
+  <g fill="#111522" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="900" text-anchor="middle">
+    <text x="42" y="49">D</text>
+    <text x="81" y="49">U</text>
+    <text x="42" y="88">E</text>
+    <text x="81" y="88">L</text>
+  </g>
+  <path d="m104 22 2.6 6.4L113 31l-6.4 2.6L104 40l-2.6-6.4L95 31l6.4-2.6L104 22Z" fill="#F6F3ED"/>
+</svg>

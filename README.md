@@ -21,11 +21,19 @@ verificar o service worker e o comportamento de instalação do PWA.
 - Escolha uma categoria e um tamanho de palavra entre 4 e 7 letras.
 - Preencha as casas clicando na posição desejada e digitando pelo teclado físico
   ou virtual.
+- O teclado virtual segue o padrão QWERTY da referência, com apagar no fim da
+  segunda linha e Enter largo no fim da terceira; o apagar usa um ícone
+  compacto e o teclado virtual não inclui Ç.
 - Envie a tentativa com Enter. Você tem até seis tentativas.
 - Verde indica letra no lugar certo; amarelo indica letra em outra posição; cinza
   indica letra ausente. Acentos são normalizados para comparar as palavras.
-- A lista de palavras é local e curada. Ela pode não incluir toda palavra válida
-  em português.
+- As respostas sorteadas ficam nas listas de categoria curadas em `index.html`.
+  Para validar palpites, o jogo também carrega `data/palavras-pt-br.txt`, com
+  milhares de palavras de 4 a 7 letras. A lista é local, fica em cache para uso
+  offline e remove formas verbais conjugadas fora do infinitivo e possíveis
+  plurais. As listas curadas também não oferecem plurais como respostas. A
+  comparação ignora acentos; a lista ainda não cobre toda palavra válida em
+  português. Fonte, licença, filtros e limitações estão em `data/README.md`.
 - Cada aparelho tem suas próprias partidas e estatísticas. O jogo ainda não
   sincroniza uma partida entre duas pessoas.
 
@@ -34,8 +42,11 @@ verificar o service worker e o comportamento de instalação do PWA.
 ```text
 index.html                    Jogo, estilos e lógica
 manifest.webmanifest          Metadados do PWA
-icon.svg                      Ícone do aplicativo
+icon.svg                      Ícone vetorial da marca, cabeçalho e PWA
 sw.js                         Cache offline
+data/palavras-pt-br.txt       Palpites adicionais locais
+data/README.md                Fonte, licença e filtros do vocabulário
+tools/filter-word-list.py     Ferramenta de manutenção do vocabulário
 DESIGN.md                     Direção visual e tokens
 .specify/memory/              Princípios permanentes do projeto
 .specify/templates/           Modelos de spec, plano e tarefas
@@ -85,5 +96,7 @@ opção do navegador para instalar ou adicionar o jogo à tela inicial.
 - Não há backend, conta de usuário ou placar sincronizado.
 - O sorteio é independente em cada aparelho; ainda não existe uma sala de duelo
   compartilhada.
-- A validação usa um vocabulário embutido e curado, não um dicionário completo.
+- A validação combina as listas curadas com uma lista local ampliada de cerca de
+  6 mil palpites. A lista não é um dicionário completo, e a remoção automática
+  de plurais e flexões verbais tem limites descritos em `data/README.md`.
 - As estatísticas ficam no `localStorage` do navegador.

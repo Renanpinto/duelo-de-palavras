@@ -6,20 +6,19 @@
   <meta name="theme-color" content="#171923">
   <meta name="description" content="Duelo de Palavras — descubra a palavra em até seis tentativas.">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="icon" href="icon.svg?v=2" type="image/svg+xml">
   <title>Duelo de Palavras</title>
   <style>
     :root{color-scheme:dark;--bg:#0d1019;--panel:#151a28;--panel2:#20273a;--text:#f6f3ed;--muted:#a6adbd;--line:#30384d;--green:#52c995;--yellow:#e3b95f;--gray:#3c4558;--accent:#b7a0ff;--rose:#f09bb0;--focus:#d4c6ff}
     *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#24243a 0,#11131b 55%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
     button,select{font:inherit} .wrap{width:min(100% - 28px,520px);margin:0 auto;padding:26px 0 38px}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-    .brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#a78bfa,#6d5bd0);display:grid;place-items:center;font-weight:900;color:#171523;font-size:20px;box-shadow:0 7px 24px #8b5cf633}
+    .brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;object-fit:cover;box-shadow:0 8px 26px #a78bfa30}
     h1{font-size:19px;letter-spacing:-.5px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:3px}
     .iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
     .hero{text-align:center;margin:16px 0 18px}.eyebrow{color:#c4b5fd;text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800}.hero h2{font-size:27px;letter-spacing:-1px;margin:7px 0 5px}.hero p{color:var(--muted);font-size:13px;margin:0}
     .toolbar{display:flex;gap:9px;align-items:center;justify-content:center;margin:18px 0 16px;flex-wrap:wrap}
     select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 34px 10px 12px;border-radius:12px;max-width:210px}
-    .pill{border:1px solid var(--line);background:#ffffff08;color:#d7d9e2;padding:8px 11px;border-radius:999px;font-size:11px}
     .board{display:grid;grid-template-rows:repeat(6,1fr);gap:7px;width:min(100%,330px);margin:0 auto 18px}
     .row{display:grid;grid-template-columns:repeat(var(--word-length,5),1fr);gap:7px}
     .tile{aspect-ratio:1;border:2px solid #3a4051;border-radius:9px;display:grid;place-items:center;font-size:clamp(22px,6vw,28px);font-weight:850;text-transform:uppercase;background:#ffffff03;transition:transform .12s,border-color .12s}
@@ -45,7 +44,6 @@
     body{background:radial-gradient(ellipse at 12% 0%,#302544 0,transparent 35%),radial-gradient(ellipse at 92% 22%,#183238 0,transparent 28%),linear-gradient(155deg,#111522 0%,#0d1019 55%,#12151f 100%)}
     .wrap{width:min(100% - 32px,560px);padding:30px 0 42px}
     header{margin-bottom:28px}
-    .logo{background:linear-gradient(145deg,var(--accent),#ed9bb3);border-radius:14px;box-shadow:0 8px 26px #a78bfa30}
     h1{font-size:18px;letter-spacing:-.6px}.sub{font-size:12px;color:#b1b7c5}
     .iconbtn{transition:background .16s,border-color .16s,transform .16s}.iconbtn:hover{background:#262d40;border-color:#59627a}.iconbtn:active{transform:scale(.96)}
     :where(button,select):focus-visible{outline:3px solid var(--focus);outline-offset:3px}
@@ -54,8 +52,9 @@
     .hero h2{font-size:clamp(30px,7vw,40px);line-height:1.08;letter-spacing:-1.8px;margin:9px 0 8px;font-weight:850}
     .hero p{font-size:14px;color:#b6bdcb;line-height:1.5}
     .toolbar{padding:12px;margin:0 auto 16px;max-width:480px;border:1px solid #ffffff12;border-radius:17px;background:#171c29b8;box-shadow:0 10px 30px #0002}
-    select{min-height:44px;max-width:none;flex:1 1 150px;border-radius:11px;background-color:#202638;border-color:#343d53;color:var(--text);font-size:13px;cursor:pointer}
-    .pill{padding:8px 12px;background:#ffffff08;color:#c7cce0}
+    .select-wrap{position:relative;display:flex;flex:1 1 120px;min-width:0}
+    .select-wrap::after{content:"";position:absolute;right:18px;top:calc(50% - 5px);width:8px;height:8px;border-right:1.7px solid #f6f3ed;border-bottom:1.7px solid #f6f3ed;transform:rotate(45deg);pointer-events:none}
+    select{appearance:none;-webkit-appearance:none;width:100%;min-width:0;min-height:44px;flex:1 1 auto;max-width:none;padding-right:46px;border-radius:11px;background-color:#202638;border-color:#343d53;color:var(--text);font-size:13px;cursor:pointer}
     .board{padding:12px;border:1px solid #ffffff13;border-radius:20px;background:linear-gradient(145deg,#1b2030d9,#141925e8);box-shadow:0 18px 44px #0003,inset 0 1px #ffffff08}
     .row{gap:7px}
     .tile{width:100%;padding:0;color:var(--text);border:1.5px solid #3b4357;border-radius:11px;background:linear-gradient(145deg,#ffffff06,#ffffff01);font-size:clamp(21px,6vw,29px);font-weight:800;cursor:default;box-shadow:inset 0 1px #ffffff08;transition:transform .14s,border-color .14s,background .14s,box-shadow .14s}
@@ -64,11 +63,16 @@
     .tile.selected{border-color:var(--accent)!important;box-shadow:0 0 0 2px #b7a0ff27,0 0 18px #b7a0ff20}
     .tile:disabled{opacity:1}
     .tile.correct{color:#081a12;background:var(--green);border-color:var(--green)}.tile.present{color:#211809;background:var(--yellow);border-color:var(--yellow)}.tile.absent{color:#f0f1f5;background:var(--gray);border-color:var(--gray)}
+    .tile.reveal{animation:tile-reveal .52s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--reveal-delay,0ms);transform-style:preserve-3d;backface-visibility:hidden}
+    .tile.reveal.correct{--reveal-color:var(--green);--reveal-ink:#081a12}.tile.reveal.present{--reveal-color:var(--yellow);--reveal-ink:#211809}.tile.reveal.absent{--reveal-color:var(--gray);--reveal-ink:#f0f1f5}
+    @keyframes tile-reveal{0%,44%{transform:rotateX(0);background:linear-gradient(145deg,#ffffff06,#ffffff01);border-color:#3b4357;color:var(--text)}50%{transform:rotateX(88deg)}51%{background:var(--reveal-color);border-color:var(--reveal-color);color:var(--reveal-ink)}100%{transform:rotateX(0);background:var(--reveal-color);border-color:var(--reveal-color);color:var(--reveal-ink)}}
     .message{min-height:28px;color:#d0c4ff;font-size:13px;margin:1px 0 10px}
-    .keyboard{gap:8px;max-width:480px}.keyrow{gap:6px}
+    .keyboard{gap:8px;max-width:540px}.keyrow{gap:6px}
     .key{height:52px;max-width:45px;border-radius:10px;background:#737d91;font-size:14px;transition:transform .12s,filter .12s,background .12s;box-shadow:inset 0 1px #ffffff20}
     .key:hover{filter:brightness(1.12)}.key:active{transform:translateY(1px) scale(.97)}
-    .key.wide{max-width:70px;font-size:10px;letter-spacing:.15px;background:#454d61}
+    .key.wide{flex:2 1 0;min-width:64px;max-width:140px;font-size:10px;letter-spacing:.15px;background:#454d61}
+    .key.backspace{flex:0 0 clamp(34px,11vw,42px);max-width:none;padding:0;font-size:20px}
+    @media(min-width:381px){.keyrow:nth-child(2){justify-content:flex-start;padding-left:20px}.keyrow:nth-child(3){justify-content:flex-end}}
     .key.correct{background:var(--green);color:#081a12}.key.present{background:var(--yellow);color:#211809}.key.absent{background:#303747;color:#aeb5c3}
     .actions{margin:18px 0 20px;gap:10px}
     .primary,.secondary{min-height:46px;border-radius:12px;transition:transform .14s,filter .14s,border-color .14s}
@@ -88,16 +92,16 @@
 <body>
   <main class="wrap">
     <header>
-      <div class="brand"><div class="logo">D</div><div><h1>Duelo de Palavras</h1><div class="sub">um jogo, infinitas revanchezinhas</div></div></div>
+      <div class="brand"><img class="logo" src="icon.svg?v=2" alt=""><div><h1>Duelo de Palavras</h1><div class="sub">um jogo, infinitas revanchezinhas</div></div></div>
       <button class="iconbtn" id="helpBtn" type="button" aria-label="Como jogar">?</button>
     </header>
     <section class="hero">
-      <div class="eyebrow">Desafio de hoje? Não. Desafio de agora.</div>
+      <div class="eyebrow">Desafio de agora.</div>
       <h2>Qual é a palavra?</h2>
       <p id="challengeText">Descubra a palavra em até 6 tentativas.</p>
     </section>
     <div class="toolbar">
-      <select id="category" aria-label="Categoria" data-select-ownership="native">
+      <div class="select-wrap"><select id="category" aria-label="Categoria" data-select-ownership="native">
         <option value="mix">🎲 Misturadão</option>
         <option value="geral">🌎 Geral</option>
         <option value="casal">💜 Casal</option>
@@ -105,11 +109,10 @@
         <option value="comida">🍕 Comida</option>
         <option value="filmes">🎬 Filmes e séries</option>
         <option value="musica">🎵 Música</option>
-      </select>
-      <select id="wordLength" aria-label="Tamanho da palavra" data-select-ownership="native">
+      </select></div>
+      <div class="select-wrap"><select id="wordLength" aria-label="Tamanho da palavra" data-select-ownership="native">
         <option value="4">4 letras</option><option value="5" selected>5 letras</option><option value="6">6 letras</option><option value="7">7 letras</option>
-      </select>
-      <span class="pill" id="roundLabel">Partida livre</span>
+      </select></div>
     </div>
     <div class="board" id="board" role="group" aria-label="Tabuleiro de seis tentativas"></div>
     <p class="message" id="message" aria-live="polite">Digite uma palavra para começar.</p>
@@ -129,7 +132,7 @@
       <div class="stat"><strong id="rate">0%</strong><span>Acerto</span></div>
       <div class="stat"><strong id="streak">0</strong><span>Sequência</span></div>
     </section>
-    <footer>Feito para duas pessoas competitivas. 💜<br>Seu progresso fica salvo neste aparelho.</footer>
+    <footer>Seu progresso fica salvo neste aparelho.</footer>
   </main>
 
   <dialog id="helpDialog" aria-labelledby="helpTitle">
@@ -159,15 +162,23 @@
     filmes: `ator atriz aventura cinema comédia desenho diretor drama elenco estreia filme ficção herói humor longa magia novela roteiro série terror trama`.split(/\s+/),
     musica: `acorde álbum baixo banda batuque canção canto cantor coral disco flauta forró guitarra melodia música notas ópera palco piano ritmo samba som teclado timbre trompete violão`.split(/\s+/)
   };
-  // A lista interna contém vocabulário português; a normalização ignora acentos.
+  // Respostas curadas ficam aqui; palpites ampliados vêm de arquivo local.
   const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/[^A-Z]/g,"");
   const cleanLists = {};
-  Object.keys(WORDS).forEach(k => cleanLists[k] = [...new Set(WORDS[k].map(norm).filter(w => w.length >= 4 && w.length <= 7))]);
+  const pluralForms = new Set(["ANOS","FERIAS","JUNTOS","NOTAS","OLHOS","RISOS"]);
+  const conjugatedForms = new Set(["DEIXA"]);
+  Object.keys(WORDS).forEach(k => cleanLists[k] = [...new Set(WORDS[k].map(norm).filter(w => w.length >= 4 && w.length <= 7 && !pluralForms.has(w) && !conjugatedForms.has(w)))]);
   const all = [...new Set(Object.values(cleanLists).flat())];
-  const valid = new Set(all);
+  // Palpites comuns acrescentados após relatos de palavras portuguesas ausentes.
+  const extraWords = ["POMBO","PORTA","POLVO"];
+  cleanLists.geral.push(...extraWords.filter(word => !cleanLists.geral.includes(word)));
+  all.push(...extraWords.filter(word => !all.includes(word)));
+  const valid = new Set(all); // União das categorias e dos palpites extras.
   const $ = id => document.getElementById(id);
+  const expandedValid = new Set();
+  let vocabularyPromise = Promise.resolve(), vocabularyError = false, checkingVocabulary = false;
   const board = $("board"), keyboard = $("keyboard");
-  let wordLength=5, answer="", guesses=[], current=Array(wordLength).fill(""), cursor=0, finished=false, round=1, history=[];
+  let wordLength=5, answer="", guesses=[], current=Array(wordLength).fill(""), cursor=0, finished=false, animating=false, revealingRow=-1, revealTimer, restoreBoardFocus=false, round=1, history=[];
   let stats = JSON.parse(localStorage.getItem("dueloStats") || '{"played":0,"wins":0,"streak":0}');
   const rows = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
   function pickWord() {
@@ -178,17 +189,18 @@
     return choices[Math.floor(Math.random()*choices.length)];
   }
   function newGame() {
+    clearTimeout(revealTimer);animating=false;revealingRow=-1;restoreBoardFocus=false;
     wordLength=Number($("wordLength").value); answer = pickWord(); guesses=[]; current=Array(wordLength).fill(""); cursor=0; finished=false;
     $("board").style.setProperty("--word-length",wordLength);
     $("board").style.width=`min(100%, ${Math.min(480,wordLength*62)}px)`;
     $("challengeText").textContent=`Descubra a palavra de ${wordLength} letras em até 6 tentativas.`;
     $("message").textContent="Digite uma palavra para começar.";
-    $("roundLabel").textContent=`Partida livre · #${round++}`;
+    round++;
     $("resultDialog").close?.();
     render(); renderKeyboard();
   }
   function render() {
-    const restoreTileFocus=board.contains(document.activeElement);
+    restoreBoardFocus=restoreBoardFocus||board.contains(document.activeElement);
     board.innerHTML="";
     for(let r=0;r<6;r++){
       const row=document.createElement("div"); row.className="row";
@@ -197,61 +209,75 @@
         const tile=document.createElement("button"); tile.type="button"; tile.className="tile";
         const letter=Array.isArray(value) ? (value[c] || "") : (value[c] || "");
         tile.textContent=letter;
-        const isActive=r===guesses.length&&!finished;
+        const isActive=r===guesses.length&&!finished&&!animating;
         tile.disabled=!isActive;
         tile.tabIndex=isActive&&c===cursor?0:-1;
         tile.setAttribute("aria-pressed",String(isActive&&c===cursor));
         tile.setAttribute("aria-label",`Casa ${c+1} de ${wordLength}: ${letter || "vazia"}`);
         if(letter) tile.classList.add("filled");
         if(guesses[r]) tile.classList.add(guesses[r].states[c]);
+        if(animating&&r===revealingRow){tile.classList.add("reveal");tile.style.setProperty("--reveal-delay",`${c*120}ms`);}
         if(isActive){if(c===cursor)tile.classList.add("selected");tile.addEventListener("click",()=>{cursor=c;render();board.querySelectorAll(".tile")[guesses.length*wordLength+cursor]?.focus({preventScroll:true});});}
         row.appendChild(tile);
       }
       board.appendChild(row);
     }
-    if(restoreTileFocus)board.querySelectorAll(".tile")[guesses.length*wordLength+cursor]?.focus({preventScroll:true});
+    const focusTarget=board.querySelectorAll(".tile")[guesses.length*wordLength+cursor];
+    if(restoreBoardFocus&&focusTarget&&!focusTarget.disabled){focusTarget.focus({preventScroll:true});restoreBoardFocus=false;}
   }
   function renderKeyboard() {
     keyboard.innerHTML="";
     rows.forEach((letters,ri)=>{
       const row=document.createElement("div"); row.className="keyrow";
-      if(ri===2) addKey(row,"APAGAR","wide",backspace);
       [...letters].forEach(ch=>addKey(row,ch,"",()=>type(ch)));
+      if(ri===1) addKey(row,"⌫","backspace",backspace,"Apagar última letra");
       if(ri===2) addKey(row,"ENTER","wide",submit);
       keyboard.appendChild(row);
     });
   }
-  function addKey(parent,label,extra,fn) {
-    const b=document.createElement("button"); b.className="key "+extra; b.textContent=label;b.type="button";b.addEventListener("click",fn);parent.appendChild(b);
+  function addKey(parent,label,extra,fn,accessibleLabel=label) {
+    const b=document.createElement("button"); b.className="key "+extra; b.textContent=label;b.type="button";b.setAttribute("aria-label",accessibleLabel);b.addEventListener("click",fn);parent.appendChild(b);
   }
-  function type(ch){if(finished)return;current[cursor]=ch;cursor=Math.min(cursor+1,wordLength-1);render();}
-  function backspace(){if(finished)return;if(current[cursor])current[cursor]="";else if(cursor>0){cursor--;current[cursor]="";}render();}
+  function type(ch){const letter=norm(ch);if(finished||animating||letter.length!==1)return;current[cursor]=letter;cursor=Math.min(cursor+1,wordLength-1);render();}
+  function backspace(){if(finished||animating)return;if(current[cursor])current[cursor]="";else if(cursor>0){cursor--;current[cursor]="";}render();}
   function score(guess) {
     const states=Array(wordLength).fill("absent"), remaining=answer.split("");
     for(let i=0;i<wordLength;i++) if(guess[i]===answer[i]){states[i]="correct";remaining[i]=null;}
     for(let i=0;i<wordLength;i++) if(states[i]!=="correct"){const j=remaining.indexOf(guess[i]);if(j!==-1){states[i]="present";remaining[j]=null;}}
     return states;
   }
-  function submit(){
-    if(finished)return;
+  async function submit(){
+    if(finished||animating||checkingVocabulary)return;
+    checkingVocabulary=true;
+    await vocabularyPromise;
+    checkingVocabulary=false;
+    if(finished||animating)return;
     if(current.some(letter=>!letter)){$("message").textContent=`Preencha as ${wordLength} letras da palavra.`;return;}
     const submitted=current.join("");
-    if(submitted.length!==wordLength || !valid.has(submitted)){ $("message").textContent="Essa palavra não está no vocabulário em português. Tente outra.";return;}
+    if(submitted.length!==wordLength || (!valid.has(submitted)&&!expandedValid.has(submitted))){ $("message").textContent=vocabularyError?"Palavra não reconhecida; o vocabulário ampliado está indisponível.":"Essa palavra não está no vocabulário em português. Tente outra.";return;}
     const states=score(submitted);
     guesses.push({word:submitted,states});
-    current=Array(wordLength).fill("");cursor=0;render(); updateKeyColors(submitted,states);
-    if(submitted===answer){finish(true);return;}
-    if(guesses.length===6){finish(false);return;}
-    $("message").textContent=`Boa! ${6-guesses.length} tentativa(s) restante(s).`;
+    current=Array(wordLength).fill("");cursor=0;animating=true;revealingRow=guesses.length-1;
+    const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const revealDuration=reducedMotion?0:520+(wordLength-1)*120;
+    $("message").textContent="Revelando resultado…";
+    render();
+    revealTimer=setTimeout(()=>{
+      animating=false;revealingRow=-1;updateKeyColors(submitted,states);
+      if(submitted===answer){finish(true);return;}
+      if(guesses.length===6){finish(false);return;}
+      $("message").textContent=`Boa! ${6-guesses.length} tentativa(s) restante(s).`;
+      render();
+    },revealDuration);
   }
   function updateKeyColors(word,states){
     [...word].forEach((ch,i)=>{
-      const keys=[...keyboard.querySelectorAll(".key")].filter(k=>k.textContent===ch);
+      const keys=[...keyboard.querySelectorAll(".key")].filter(k=>norm(k.textContent)===ch);
       keys.forEach(k=>{if(states[i]==="correct"||(!k.classList.contains("correct")&&states[i]==="present")||(!k.classList.contains("correct")&&!k.classList.contains("present")&&states[i]==="absent"))k.classList.add(states[i]);});
     });
   }
   function finish(win){
-    finished=true;stats.played++;if(win){stats.wins++;stats.streak++;}else stats.streak=0;
+    finished=true;render();stats.played++;if(win){stats.wins++;stats.streak++;}else stats.streak=0;
     localStorage.setItem("dueloStats",JSON.stringify(stats));updateStats();
     $("message").textContent=win?"Acertou! Mandou bem! 🎉":"Fim de jogo! Na próxima você pega.";
     $("resultTitle").textContent=win?"Você matou a charada! 🎉":"Quase! Essa escapou.";
@@ -273,13 +299,18 @@
   }
   document.addEventListener("keydown",e=>{
     if($("helpDialog").open||$("resultDialog").open)return;
-    if(e.key==="Enter")submit();else if(e.key==="Backspace")backspace();else if(/^[a-zA-Z]$/.test(e.key))type(norm(e.key));
+    if(e.key==="Enter")submit();else if(e.key==="Backspace")backspace();else if(/^\p{L}$/u.test(e.key))type(norm(e.key));
   });
+  function loadExpandedVocabulary(){
+    vocabularyPromise=fetch("./data/palavras-pt-br.txt").then(response=>{if(!response.ok)throw new Error("Falha ao carregar vocabulário");return response.text();}).then(text=>{
+      text.split(/\s+/).forEach(word=>{const normalized=norm(word);if(normalized.length>=4&&normalized.length<=7)expandedValid.add(normalized);});
+    }).catch(()=>{vocabularyError=true;$("message").textContent="Vocabulário ampliado indisponível; usando a lista básica.";});
+  }
   $("newGame").addEventListener("click",newGame);$("againBtn").addEventListener("click",newGame);
   $("shareBtn").addEventListener("click",share);$("category").addEventListener("change",newGame);$("wordLength").addEventListener("change",newGame);
   $("helpBtn").addEventListener("click",()=>$("helpDialog").showModal());$("closeHelp").addEventListener("click",()=>$("helpDialog").close());
   $("closeResult").addEventListener("click",()=>$("resultDialog").close());
-  updateStats();newGame();
+  updateStats();newGame();loadExpandedVocabulary();
   if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js").catch(()=>{});
 })();
 </script>

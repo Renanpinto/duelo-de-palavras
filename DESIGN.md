@@ -84,7 +84,7 @@ Buttons and selectable tiles have visible hover and focus-visible states, a pres
 
 ### Buttons and actions
 
-The lilac gradient is reserved for the primary action. Secondary actions use a bordered raised surface. Keyboard keys are compact, high-contrast buttons; Enter and delete remain wider and visibly labeled.
+The lilac gradient is reserved for the primary action. Secondary actions use a bordered raised surface. Keyboard keys are compact, high-contrast buttons; Enter is wide, while delete uses a compact backspace symbol with an accessible label.
 
 ### Navigation and data display
 
@@ -96,7 +96,7 @@ Category and word length use native selects because the option sets are short an
 
 ### Iconography
 
-There is no icon library. Use text labels and the existing simple “D” brand mark; do not add decorative icons to letter feedback.
+There is no icon library. Use text labels and the custom 2×2 DUEL letter-tile mark in `icon.svg`; do not add decorative icons to letter feedback.
 
 ### Motion
 
