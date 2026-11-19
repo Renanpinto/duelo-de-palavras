@@ -33,11 +33,12 @@ verificar o service worker e o comportamento de instalação do PWA.
   teclado virtual ficar visível.
 - As respostas sorteadas ficam nas listas de categoria curadas em `index.html`.
   Para validar palpites, o jogo também carrega `data/palavras-pt-br.txt`, com
-  milhares de palavras de 4 a 7 letras. A lista é local, fica em cache para uso
-  offline e remove formas verbais conjugadas fora do infinitivo e possíveis
-  plurais. As listas curadas também não oferecem plurais como respostas. A
-  comparação ignora acentos; a lista ainda não cobre toda palavra válida em
-  português. Fonte, licença, filtros e limitações estão em `data/README.md`.
+  cerca de 70 mil palavras de 4 a 7 letras, incluindo plurais e verbos conjugados
+  que podem ser tentados. A lista é local e fica em cache para uso offline; ela
+  não entra no sorteio. As respostas vêm das listas curadas, sem plurais
+  conhecidos ou formas verbais conjugadas fora do infinitivo. A comparação
+  ignora acentos; a lista ainda não cobre todo o português. Fonte, licença,
+  filtros e limitações estão em `data/README.md`.
 - Cada aparelho tem suas próprias partidas e estatísticas. O jogo ainda não
   sincroniza uma partida entre duas pessoas.
 
@@ -100,7 +101,8 @@ opção do navegador para instalar ou adicionar o jogo à tela inicial.
 - Não há backend, conta de usuário ou placar sincronizado.
 - O sorteio é independente em cada aparelho; ainda não existe uma sala de duelo
   compartilhada.
-- A validação combina as listas curadas com uma lista local ampliada de cerca de
-  6 mil palpites. A lista não é um dicionário completo, e a remoção automática
-  de plurais e flexões verbais tem limites descritos em `data/README.md`.
+- A validação combina as listas curadas com cerca de 24 mil palpites da lista
+  local. Ela inclui plurais e verbos conjugados, mas não é um dicionário
+  completo; a normalização sem acento também junta formas como `pais` e `país`.
+  Os detalhes estão em `data/README.md`.
 - As estatísticas ficam no `localStorage` do navegador.

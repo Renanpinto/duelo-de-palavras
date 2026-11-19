@@ -2,8 +2,8 @@
 
 ## Resumo técnico
 
-Extrair de uma lista de frequência pt-BR um conjunto estático de formas de 4 a
-7 letras e colocá-lo em `data/palavras-pt-br.txt`. O jogo carrega o arquivo
+Unir listas pt-BR licenciadas, filtrar tokens de 4 a 7 letras, normalizar e
+deduplicar em `data/palavras-pt-br.txt`. O jogo carrega o arquivo
 localmente durante a inicialização e aguarda a carga se a pessoa enviar um
 palpite antes dela terminar. As formas normalizadas se juntam às palavras
 curadas para validação; as listas de respostas também deixam de conter plurais
@@ -20,9 +20,9 @@ conhecidos e formas conjugadas fora do infinitivo.
 
 ## Decisões
 
-- Fonte principal: FrequencyWords, variante pt_BR de 50 mil entradas baseada
-  em OpenSubtitles 2018; conteúdo sob CC BY-SA 4.0. O léxico e as listas de
-  formas conjugadas e infinitivos auxiliares vêm de fserb/pt-br (MIT).
+- Fontes: FrequencyWords pt_BR, baseada em OpenSubtitles 2018 (CC BY-SA 4.0),
+  mais `lexico` e `conjugações` de fserb/pt-br (MIT); os avisos ficam em
+  `data/README.md` e `data/LICENSE-fserb-MIT.txt`.
 - Transformação: manter apenas tokens alfabéticos de 4 a 7 letras, deduplicar
   após remoção de acentos e caixa; registrar que a lista foi filtrada e
   normalizada.
@@ -37,19 +37,18 @@ conhecidos e formas conjugadas fora do infinitivo.
 
 ## Sequência de implementação
 
-1. Obter a lista licenciada e as listas de flexões; retirar plurais e formas
-   verbais conjugadas, mantendo infinitivos; registrar atribuição e licença.
+1. Unir as fontes licenciadas, preservar plurais e conjugações nos palpites,
+   filtrar por tamanho e registrar atribuição e licenças.
 2. Integrar carregamento local com fallback e validação normalizada.
 3. Atualizar cache, README, spec e tarefas.
 4. Conferir os critérios de aceite no navegador.
 
 ## Riscos e compatibilidade
 
-- Frequência de legendas pode incluir nomes, gírias e erros de transcrição; o
-  conjunto não é usado para sortear respostas.
-- A remoção automática de plural e conjugação pode descartar uma forma que também
-  tenha outra classe gramatical; regras de acentuação neutralizam distinções
-  como `pais`/`país`.
+- As fontes incluem palavras raras; o arquivo ampliado não é usado para sortear
+  respostas.
+- A normalização sem acentos colapsa formas distintas como `pais`/`país`; a
+  lista de palpites mantém apenas uma forma normalizada.
 - Carregar um arquivo extra aumenta a transferência inicial, mas o arquivo é
   texto estático e permanece em cache depois do primeiro carregamento.
 
